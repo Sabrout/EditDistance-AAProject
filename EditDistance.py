@@ -1,6 +1,8 @@
 import numpy as np
 import random
 import string
+import time
+
 
 # INITIALIZATION
 def init(s1, s2):
@@ -19,7 +21,11 @@ def init(s1, s2):
 
 # Minimum Edit Distance (MED)
 # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
-def med_classic(m):
+def med_classic(s1, s2):
+    # # setting timer for running time
+    start_time = time.time()
+    # INITIALIZATION
+    m = init(s1, s2)
     for i in range(1, m.shape[0]):
         for j in range(1, m.shape[1]):
 
@@ -39,10 +45,13 @@ def med_classic(m):
 
             # assign minimum value
             m[i][j] = min(con1, con2, con3)
+    # # printing running time
+    print("--- %s seconds ---" % (time.time() - start_time))
+    print(m)
     return m[m.shape[0] - 1][m.shape[1] - 1]
 
 
-def string_generator(size=10, chars=string.ascii_uppercase):
+def string_generator(size=13, chars=string.ascii_uppercase):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
@@ -51,8 +60,8 @@ s2 = string_generator()
 print('String #1 : ' + s1)
 print('String #2 : ' + s2)
 
-m = init(s1, s2)
-result = med_classic(m)
-print(result)
-print("------------------------")
-print(m)
+
+
+# CLASSIC DP
+result = med_classic(s1, s2)
+print("{} {}".format("MINIMUM EDIT DISTANCE :", result))
