@@ -28,7 +28,7 @@ def med_classic(m):
             # second condition : j is a deletion
             con2 = m[i, j - 1] + 1
 
-            # third condition : i and j are a subtitution
+            # third condition : i and j are a substitution
             if s1[i - 1] == s2[j - 1]:
                 # if same letters, we add nothing
                 con3 = m[i - 1, j - 1]
