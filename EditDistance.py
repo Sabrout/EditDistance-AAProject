@@ -1,7 +1,8 @@
 import numpy as np
+import random
+import string
 
-
-# INTIALIZATION
+# INITIALIZATION
 def init(s1, s2):
     m = np.zeros((len(s1) + 1, len(s2) + 1))
 
@@ -36,16 +37,22 @@ def med_classic(m):
                 # if different letters, we add one
                 con3 = m[i - 1, j - 1] + 1
 
-            # assgin minimum value
+            # assign minimum value
             m[i][j] = min(con1, con2, con3)
     return m[m.shape[0] - 1][m.shape[1] - 1]
 
 
-s1 = "INTENTION"
-s2 = "EXECUTION"
+def string_generator(size=10, chars=string.ascii_uppercase):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+s1 = string_generator()
+s2 = string_generator()
 print('String #1 : ' + s1)
 print('String #2 : ' + s2)
 
 m = init(s1, s2)
 result = med_classic(m)
 print(result)
+print("------------------------")
+print(m)
