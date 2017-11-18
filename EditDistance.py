@@ -2,18 +2,17 @@ import numpy as np
 import random
 import string
 import time
-
+import math
 
 # INITIALIZATION
 def init(s1, s2):
-    m = np.zeros((len(s1) + 1, len(s2) + 1))
-
+    m = np.empty((len(s1) + 1, len(s2) + 1))
+    m[:] = np.NAN
+    # initializing the first row
+    m[0] = np.arange(m.shape[1])
+    # initializing the first column
     counter = 0
     for i in m:
-        if counter == 0:
-            # initializing the first row
-            m[0] = np.arange(i.size)
-        # initializing the first column
         i[0] = counter
         counter += 1
     return m
@@ -22,8 +21,6 @@ def init(s1, s2):
 # Minimum Edit Distance (MED)
 # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
 def med_classic(s1, s2):
-    # # setting timer for running time
-    start_time = time.time()
     # INITIALIZATION
     m = init(s1, s2)
     for i in range(1, m.shape[0]):
@@ -45,23 +42,39 @@ def med_classic(s1, s2):
 
             # assign minimum value
             m[i][j] = min(con1, con2, con3)
-    # # printing running time
-    print("--- %s seconds ---" % (time.time() - start_time))
+    # # printing matrix, result and running time
+    print(" ")
     print(m)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
     return m[m.shape[0] - 1][m.shape[1] - 1]
 
 
+# RUNTIME CALCULATOR
+def calculateRunTime(function, *args):
+    startTime = time.time()
+    result = function(*args)
+    return time.time() - startTime, result
+
+
+# RANDOM STRING GENERATOR
 def string_generator(size=13, chars=string.ascii_uppercase):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
-s1 = string_generator()
-s2 = string_generator()
-print('String #1 : ' + s1)
-print('String #2 : ' + s2)
+def main():
+    # s1 = string_generator()
+    # s2 = string_generator()
+    s1 = "TION"
+    s2 = "EXECUTION"
+    print('String #1 : ' + s1)
+    print('String #2 : ' + s2)
 
 
+    # CLASSIC DP
+    print("_______________________________________")
+    print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
+    print("RUNNING TIME :  %s seconds" % calculateRunTime(med_classic, s1, s2)[0])
 
-# CLASSIC DP
-result = med_classic(s1, s2)
-print("{} {}".format("MINIMUM EDIT DISTANCE :", result))
+
+if __name__ == "__main__":main()
