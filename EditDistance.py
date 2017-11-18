@@ -1,16 +1,18 @@
 import numpy as np
+import random
+import string
+import time
+import math
 
-
-# INTIALIZATION
+# INITIALIZATION
 def init(s1, s2):
-    m = np.zeros((len(s1) + 1, len(s2) + 1))
-
+    m = np.empty((len(s1) + 1, len(s2) + 1))
+    m[:] = np.NAN
+    # initializing the first row
+    m[0] = np.arange(m.shape[1])
+    # initializing the first column
     counter = 0
     for i in m:
-        if counter == 0:
-            # initializing the first row
-            m[0] = np.arange(i.size)
-        # initializing the first column
         i[0] = counter
         counter += 1
     return m
@@ -18,7 +20,9 @@ def init(s1, s2):
 
 # Minimum Edit Distance (MED)
 # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
-def med_classic(m):
+def med_classic(s1, s2):
+    # INITIALIZATION
+    m = init(s1, s2)
     for i in range(1, m.shape[0]):
         for j in range(1, m.shape[1]):
 
@@ -36,16 +40,41 @@ def med_classic(m):
                 # if different letters, we add one
                 con3 = m[i - 1, j - 1] + 1
 
-            # assgin minimum value
+            # assign minimum value
             m[i][j] = min(con1, con2, con3)
+    # # printing matrix, result and running time
+    print(" ")
+    print(m)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
     return m[m.shape[0] - 1][m.shape[1] - 1]
 
 
-s1 = "INTENTION"
-s2 = "EXECUTION"
-print('String #1 : ' + s1)
-print('String #2 : ' + s2)
+# RUNTIME CALCULATOR
+def calculateRunTime(function, *args):
+    startTime = time.time()
+    result = function(*args)
+    return time.time() - startTime, result
 
-m = init(s1, s2)
-result = med_classic(m)
-print(result)
+
+# RANDOM STRING GENERATOR
+def string_generator(size=13, chars=string.ascii_uppercase):
+    return ''.join(random.choice(chars) for _ in range(size))
+
+
+def main():
+    # s1 = string_generator()
+    # s2 = string_generator()
+    s1 = "TION"
+    s2 = "EXECUTION"
+    print('String #1 : ' + s1)
+    print('String #2 : ' + s2)
+
+
+    # CLASSIC DP
+    print("_______________________________________")
+    print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
+    print("RUNNING TIME :  %s seconds" % calculateRunTime(med_classic, s1, s2)[0])
+
+
+if __name__ == "__main__":main()
