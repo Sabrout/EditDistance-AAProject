@@ -4,6 +4,7 @@ import string
 import time
 import math
 
+
 # INITIALIZATION
 def init(s1, s2):
     m = np.empty((len(s1) + 1, len(s2) + 1))
@@ -42,7 +43,48 @@ def med_classic(s1, s2):
 
             # assign minimum value
             m[i][j] = min(con1, con2, con3)
-    # # printing matrix, result and running time
+    # printing matrix, result and running time
+    print(" ")
+    print(m)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
+    return m[m.shape[0] - 1][m.shape[1] - 1]
+
+
+# K STRIP ALGORITHM
+def med_k(s1, s2, k=0):
+    # INITIALIZATION
+    m = init(s1, s2)
+    for i in range(1, m.shape[0]):
+        print(i)
+        # first condition : i is an insertion
+        print(float(m[i - 1, i]))
+        if float(m[i - 1, i]) != np.NAN:
+            con1 = m[i - 1, i] + 1
+        else:
+            print("Fuck")
+            con1 = math.inf
+
+        # second condition : j is a deletion
+        if float(m[i, i - 1]) != np.NAN:
+            con2 = m[i, i - 1] + 1
+        else:
+            print("Fuck")
+            con2 = math.inf
+
+        # third condition : i and j are a substitution
+        if s1[i - 1] == s2[i - 1]:
+            # if same letters, we add nothing
+            con3 = m[i - 1, i - 1]
+        else:
+            # if different letters, we add one
+            con3 = m[i - 1, i - 1] + 2
+
+        # assign minimum value
+        m[i][i] = min(con1, con2, con3)
+
+        print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
+    # printing matrix, result and running time
     print(" ")
     print(m)
     print(" ")
@@ -51,7 +93,7 @@ def med_classic(s1, s2):
 
 
 # RUNTIME CALCULATOR
-def calculateRunTime(function, *args):
+def calc_runtime(function, *args):
     startTime = time.time()
     result = function(*args)
     return time.time() - startTime, result
@@ -65,16 +107,21 @@ def string_generator(size=13, chars=string.ascii_uppercase):
 def main():
     # s1 = string_generator()
     # s2 = string_generator()
-    s1 = "TION"
+    s1 = "INTENTION"
     s2 = "EXECUTION"
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
 
-    # CLASSIC DP
-    print("_______________________________________")
+    # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
+    print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
-    print("RUNNING TIME :  %s seconds" % calculateRunTime(med_classic, s1, s2)[0])
+    print("RUNNING TIME :  %s seconds" % calc_runtime(med_classic, s1, s2)[0])
+
+    # K STRIP ALGORITHM
+    print("_________________")
+    print("K STRIP ALGORITHM")
+    print("RUNNING TIME :  %s seconds" % calc_runtime(med_k, s1, s2)[0])
 
 
 if __name__ == "__main__":main()
