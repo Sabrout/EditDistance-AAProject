@@ -51,38 +51,70 @@ def med_classic(s1, s2):
 
 # K STRIP ALGORITHM
 def med_k(s1, s2, k=0):
+
+    # K value exception
+    if k > (len(s1)-1) + (len(s2)-1):
+        raise Exception('K VALUE OUT OF BOUNDS')
+
     # INITIALIZATION
     m = init(s1, s2)
+    # Preparing K diagonals
+    ki = int(k / 2)
+    if k%2 != 0:
+        ki += 1
+    kj = int(k / 2)
+    # Result variable initiation
     result = None
-    for i in range(1, m.shape[0]):
-        # first condition : i is an insertion
-        if not np.isnan(m[i - 1, i]):
-            con1 = m[i - 1, i] + 1
-        else:
-            con1 = math.inf
 
-        # second condition : j is a deletion
-        if not np.isnan(m[i, i - 1]):
-            con2 = m[i, i - 1] + 1
-        else:
-            con2 = math.inf
+    # Flag for calculating which side of the strip
+    upper = True
 
-        # third condition : i and j are a substitution
-        if s1[i - 1] == s2[i - 1]:
-            # if same letters, we add nothing
-            con3 = m[i - 1, i - 1]
+    # Loop for K strips around the main diagonal
+    k = ki
+    while k > -1:
+        # Switching to calculate the other side of the diagonal
+        if k == 0 and upper:
+            k =kj
+            upper = False
+        # Deciding which side
+        if upper:
+            k_up = k
+            k_down = 0
         else:
-            # if different letters, we add one
-            con3 = m[i - 1, i - 1] + 1
+            k_up = 0
+            k_down = k
+        for i in range(1, m.shape[0]):
+            for j in range(1, m.shape[1]):
+                if i+k_up == j+k_down:
+                    # first condition : i is an insertion
+                    if not np.isnan(m[i - 1, j]):
+                        con1 = m[i - 1, j] + 1
+                    else:
+                        con1 = math.inf
 
-        # assign minimum value
-        m[i][i] = min(con1, con2, con3)
-        # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
-        result = m[i][i]
+                    # second condition : j is a deletion
+                    if not np.isnan(m[i, j - 1]):
+                        con2 = m[i, j - 1] + 1
+                    else:
+                        con2 = math.inf
+
+                    # third condition : i and j are a substitution
+                    if s1[i - 1] == s2[j - 1]:
+                        # if same letters, we add nothing
+                        con3 = m[i - 1, j - 1]
+                    else:
+                        # if different letters, we add one
+                        con3 = m[i - 1, j - 1] + 1
+
+                    # assign minimum value
+                    m[i][j] = min(con1, con2, con3)
+                    # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
+                    result = m[i][j]
+        k -= 1
     # printing result and running time
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result)))
-    return m[m.shape[0] - 1][m.shape[1] - 1], m
+    return result, m
 
 
 # RUNTIME CALCULATOR
@@ -105,7 +137,6 @@ def main():
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
-
     # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
     print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
@@ -118,11 +149,13 @@ def main():
     # K STRIP ALGORITHM
     print("_________________")
     print("K STRIP ALGORITHM")
-    result = calc_runtime(med_k, s1, s2, 0)
+    k = 5
+    result = calc_runtime(med_k, s1, s2, k)
     print("RUNNING TIME :  %s seconds" % result[0])
+    print("K :  %s" % k)
     # Printing Matrix
-    print("")
-    print(result[1][1])
+    # print("")
+    # print(result[1][1])
 
 
 if __name__ == "__main__":main()
