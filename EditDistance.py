@@ -143,8 +143,8 @@ def main():
     result = calc_runtime(med_classic, s1, s2)
     print("RUNNING TIME :  %s seconds" % result[0])
     # Printing Matrix
-    # print("")
-    # print(result[1][1])
+    print("")
+    print(result[1][1])
 
     # K STRIP ALGORITHM
     print("_________________")
