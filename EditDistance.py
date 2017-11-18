@@ -43,12 +43,10 @@ def med_classic(s1, s2):
 
             # assign minimum value
             m[i][j] = min(con1, con2, con3)
-    # printing matrix, result and running time
-    print(" ")
-    print(m)
+    # printing result and running time
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
-    return m[m.shape[0] - 1][m.shape[1] - 1]
+    return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
 # K STRIP ALGORITHM
@@ -56,20 +54,16 @@ def med_k(s1, s2, k=0):
     # INITIALIZATION
     m = init(s1, s2)
     for i in range(1, m.shape[0]):
-        print(i)
         # first condition : i is an insertion
-        print(float(m[i - 1, i]))
-        if float(m[i - 1, i]) != np.NAN:
+        if not np.isnan(m[i - 1, i]):
             con1 = m[i - 1, i] + 1
         else:
-            print("Fuck")
             con1 = math.inf
 
         # second condition : j is a deletion
-        if float(m[i, i - 1]) != np.NAN:
+        if not np.isnan(m[i, i - 1]):
             con2 = m[i, i - 1] + 1
         else:
-            print("Fuck")
             con2 = math.inf
 
         # third condition : i and j are a substitution
@@ -78,18 +72,15 @@ def med_k(s1, s2, k=0):
             con3 = m[i - 1, i - 1]
         else:
             # if different letters, we add one
-            con3 = m[i - 1, i - 1] + 2
+            con3 = m[i - 1, i - 1] + 1
 
         # assign minimum value
         m[i][i] = min(con1, con2, con3)
-
-        print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
-    # printing matrix, result and running time
-    print(" ")
-    print(m)
+        # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
+    # printing result and running time
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
-    return m[m.shape[0] - 1][m.shape[1] - 1]
+    return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
 # RUNTIME CALCULATOR
@@ -107,8 +98,8 @@ def string_generator(size=13, chars=string.ascii_uppercase):
 def main():
     # s1 = string_generator()
     # s2 = string_generator()
-    s1 = "INTENTION"
-    s2 = "EXECUTION"
+    s1 = "INTENTIONINTENTION"
+    s2 = "EXECUTIONEXECUTION"
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
@@ -117,11 +108,17 @@ def main():
     print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
     print("RUNNING TIME :  %s seconds" % calc_runtime(med_classic, s1, s2)[0])
+    # Printing Matrix
+    # print("")
+    # print(med_classic(s1, s2)[1])
 
     # K STRIP ALGORITHM
     print("_________________")
     print("K STRIP ALGORITHM")
     print("RUNNING TIME :  %s seconds" % calc_runtime(med_k, s1, s2)[0])
+    # Printing Matrix
+    # print("")
+    # print(med_k(s1, s2)[1])
 
 
 if __name__ == "__main__":main()
