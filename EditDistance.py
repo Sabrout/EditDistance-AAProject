@@ -53,6 +53,7 @@ def med_classic(s1, s2):
 def med_k(s1, s2, k=0):
     # INITIALIZATION
     m = init(s1, s2)
+    result = None
     for i in range(1, m.shape[0]):
         # first condition : i is an insertion
         if not np.isnan(m[i - 1, i]):
@@ -77,9 +78,10 @@ def med_k(s1, s2, k=0):
         # assign minimum value
         m[i][i] = min(con1, con2, con3)
         # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
+        result = m[i][i]
     # printing result and running time
     print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result)))
     return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
@@ -98,8 +100,8 @@ def string_generator(size=13, chars=string.ascii_uppercase):
 def main():
     # s1 = string_generator()
     # s2 = string_generator()
-    s1 = "INTENTIONINTENTION"
-    s2 = "EXECUTIONEXECUTION"
+    s1 = "INTENTION"
+    s2 = "EXECUTION"
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
@@ -107,18 +109,20 @@ def main():
     # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
     print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
-    print("RUNNING TIME :  %s seconds" % calc_runtime(med_classic, s1, s2)[0])
+    result = calc_runtime(med_classic, s1, s2)
+    print("RUNNING TIME :  %s seconds" % result[0])
     # Printing Matrix
     # print("")
-    # print(med_classic(s1, s2)[1])
+    # print(result[1][1])
 
     # K STRIP ALGORITHM
     print("_________________")
     print("K STRIP ALGORITHM")
-    print("RUNNING TIME :  %s seconds" % calc_runtime(med_k, s1, s2)[0])
+    result = calc_runtime(med_k, s1, s2, 0)
+    print("RUNNING TIME :  %s seconds" % result[0])
     # Printing Matrix
-    # print("")
-    # print(med_k(s1, s2)[1])
+    print("")
+    print(result[1][1])
 
 
 if __name__ == "__main__":main()
