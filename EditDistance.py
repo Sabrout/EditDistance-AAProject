@@ -53,7 +53,7 @@ def med_classic(s1, s2):
 def med_k(s1, s2, k=0):
 
     # K value exception
-    if k > (len(s1)-1) + (len(s2)-1):
+    if k > (len(s1)-1) + (len(s2)-1) or k < 0:
         raise Exception('K VALUE OUT OF BOUNDS')
 
     # INITIALIZATION
@@ -149,13 +149,13 @@ def main():
     # K STRIP ALGORITHM
     print("_________________")
     print("K STRIP ALGORITHM")
-    k = 5
+    k = 0
     result = calc_runtime(med_k, s1, s2, k)
     print("RUNNING TIME :  %s seconds" % result[0])
     print("K :  %s" % k)
     # Printing Matrix
-    # print("")
-    # print(result[1][1])
+    print("")
+    print(result[1][1])
 
 
 if __name__ == "__main__":main()
