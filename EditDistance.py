@@ -117,6 +117,25 @@ def med_k(s1, s2, k=0):
     return result, m
 
 
+# PURE RECURSIVE ALGORITHM
+def med_recursive(s1, s2):
+    n = len(s1)
+    m = len(s2)
+    # base cases
+    if n == 0 and m == 0:
+        return 0
+    if n == 0:
+        return m
+    if m == 0:
+        return n
+    # recursive definition
+    con1 = med_recursive(s1[:-1], s2) + 1   # Deletion
+    con2 = med_recursive(s1, s2[:-1]) + 1   # Insertion
+    con3 = med_recursive(s1[:-1], s2[:-1]) + (s1[-1] != s2[-1])   # Substitution
+
+    return min(con1, con2, con3)
+
+
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
     startTime = time.time()
@@ -125,7 +144,7 @@ def calc_runtime(function, *args):
 
 
 # RANDOM STRING GENERATOR
-def string_generator(size=13, chars=string.ascii_uppercase):
+def string_generator(size=10, chars=string.ascii_uppercase):
     return ''.join(random.choice(chars) for _ in range(size))
 
 
@@ -143,8 +162,8 @@ def main():
     result = calc_runtime(med_classic, s1, s2)
     print("RUNNING TIME :  %s seconds" % result[0])
     # Printing Matrix
-    print("")
-    print(result[1][1])
+    # print("")
+    # print(result[1][1])
 
     # K STRIP ALGORITHM
     print("_________________")
@@ -154,8 +173,16 @@ def main():
     print("RUNNING TIME :  %s seconds" % result[0])
     print("K :  %s" % k)
     # Printing Matrix
-    print("")
-    print(result[1][1])
+    # print("")
+    # print(result[1][1])
+
+    # PURE RECURSIVE ALGORITHM
+    print("________________________")
+    print("PURE RECURSIVE ALGORITHM")
+    result = calc_runtime(med_recursive, s1, s2)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
+    print("RUNNING TIME :  %s seconds" % result[0])
 
 
 if __name__ == "__main__":main()
