@@ -38,3 +38,9 @@ defined).
 
 The project can be done in group of between 2 to 4 students, and each student must program at least one
 algorithm.
+
+**3. Team Members** : \
+• Omar Elsabrout \
+• Loujain Liekah \
+• Rohil Gupta \
+• Hyeonju Ryu
