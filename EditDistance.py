@@ -136,6 +136,10 @@ def med_recursive(s1, s2):
     return min(con1, con2, con3)
 
 
+# BRANCH AND BOUND ALGORITHM
+def med_branch():
+    return 
+
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
     startTime = time.time()
