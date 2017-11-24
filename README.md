@@ -50,6 +50,7 @@ algorithm.
 • Alignment  \
 • K strip calculation order \
 • Divide and Connquer \
+• Greedy Algorithm \
 • Pure Recursive Optimization \
 • Branch and Bound Heuristic \
 • Experimental Protocol (Analyze Protin Samples on Cloud Servers) \
