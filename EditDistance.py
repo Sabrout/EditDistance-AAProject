@@ -157,19 +157,16 @@ def med_branch(s1, s2, cost=0):
     f_con3 = h_con3 + cost
     # recursive definition
     mini = min(f_con1, f_con2, f_con3)
-    # print("{} {} {} {} {} {} {} {}".format("MINI : ", mini, "___  f_con1 :", f_con1, "___  f_con2 :", f_con2, "___  f_con3 :", f_con3))
+    print("{} {} {} {} {} {} {} {}".format("MINI : ", mini, "___  f_con1 :", f_con1, "___  f_con2 :", f_con2, "___  f_con3 :", f_con3))
     if mini == f_con1:
         # print("Branch 1")
-        con1 = med_branch(s1[:-1], s2, cost) + 1  # Deletion
-        return con1
+        return med_branch(s1[:-1], s2, cost) + 1  # Deletion
     if mini == f_con2:
         # print("Branch 2")
-        con2 = med_branch(s1, s2[:-1], cost) + 1  # Insertion
-        return con2
+        return med_branch(s1, s2[:-1], cost) + 1  # Insertion
     if mini == f_con3:
         # print("Branch 3")
-        con3 = med_branch(s1[:-1], s2[:-1], cost) + (s1[-1] != s2[-1])  # Substitution
-        return con3
+        return med_branch(s1[:-1], s2[:-1], cost) + (s1[-1] != s2[-1])  # Substitution
 
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
