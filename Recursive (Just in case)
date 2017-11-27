@@ -1,0 +1,14 @@
+def pure_recursive(s1,s2):
+    m=len(s1)
+    n=len(s2)
+    if m==0:
+        return n
+    if n==0:
+        return m
+    if s1[m-1]==s2[n-1]:
+        return pure_recursive(s1[:-1],s2[:-1])
+
+    return 1+min(pure_recursive(s1,s2[:-1]),
+                 pure_recursive(s1[:-1],s2),
+                 pure_recursive(s1[:-1],s2[:-1])
+                 )
