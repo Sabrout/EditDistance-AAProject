@@ -44,15 +44,3 @@ algorithm.
 • Loujain Liekah \
 • Rohil Gupta \
 • Hyeonju Ryu
-
-
-**4. TO-DO List** :\
-• Alignment  \
-• K strip calculation order [DONE] \
-• Divide and Connquer \
-• Greedy Algorithm \
-• Pure Recursive Optimization \
-• Branch and Bound Heuristic \
-• Experimental Protocol (Analyze Protin Samples on Cloud Servers) \
-• GUI (Project Data) \
-• Report 
