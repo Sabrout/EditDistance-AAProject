@@ -44,13 +44,11 @@ def med_classic(s1, s2):
             # assign minimum value
             m[i][j] = min(con1, con2, con3)
     # printing result and running time
-    print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
     return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
 # K STRIP ALGORITHM
-def med_k(s1, s2, k=0):
+def med_k(s1, s2, k=1):
 
     # K value exception
     if k > max((len(s1)), (len(s2))) or k < 1:
@@ -90,8 +88,6 @@ def med_k(s1, s2, k=0):
         offset += 1
         if cap < m.shape[1]:cap += 1
     # printing result and running time
-    print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result)))
     return result, m
 
 
@@ -138,6 +134,8 @@ def main():
     print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
     result = calc_runtime(med_classic, s1, s2)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][0])))
     print("RUNNING TIME :  %s seconds" % result[0])
     # Printing Matrix
     # print("")
@@ -148,6 +146,8 @@ def main():
     print("K STRIP ALGORITHM")
     k = 1
     result = calc_runtime(med_k, s1, s2, k)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][0])))
     print("RUNNING TIME :  %s seconds" % result[0])
     print("K :  %s" % k)
     # Printing Matrix
