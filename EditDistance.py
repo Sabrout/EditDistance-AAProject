@@ -180,9 +180,9 @@ def med_branch(s1, s2, cost=0, bound=0):
 
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
-    startTime = time.time()
+    start_time = time.time()
     result = function(*args)
-    return time.time() - startTime, result
+    return time.time() - start_time, result
 
 
 # RANDOM STRING GENERATOR
