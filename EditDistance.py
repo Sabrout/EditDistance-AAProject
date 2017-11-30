@@ -178,6 +178,39 @@ def med_branch(s1, s2, cost=0, bound=0):
         return med_branch(s1[:-1], s2[:-1], cost, bound) + (s1[-1] != s2[-1])  # Substitution
 
 
+# APPROXIMATED GREEDY ALGORITHM
+def med_greedy(s1,s2, lookahead=3):
+    n = len(s1)
+    m = len(s2)
+    difference = abs(m - n)
+    # base cases
+    if n == 0 and m == 0:
+        return 0
+    if n == 0:
+        return m
+    if m == 0:
+        return n
+    # Greedy Approach
+    if difference > lookahead-1 and m > lookahead-1 and n > lookahead-1:
+        if n > m:
+            return med_greedy(s1[:-lookahead], s2) + lookahead  # Deletion
+        if m > n:
+            return med_greedy(s1, s2[:-lookahead]) + lookahead  # Insertion
+        if m == n:
+            temp = 0
+            for k in range(1, lookahead+1):
+                if s1[-k] != s2[-k]:
+                    temp += 1
+            return med_greedy(s1[:-lookahead], s2[:-lookahead]) + temp  # Substitution
+    else:
+        if n > m:
+            return med_greedy(s1[:-1], s2) + 1  # Deletion
+        if m > n:
+            return med_greedy(s1, s2[:-1]) + 1  # Insertion
+        if m == n:
+            return med_greedy(s1[:-1], s2[:-1]) + (s1[-1] != s2[-1])  # Substitution
+
+          
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
     start_time = time.time()
@@ -242,4 +275,14 @@ def main():
     print("RUNNING TIME :  %s seconds" % result[0])
 
 
+    # APPROXIMATED GREEDY ALGORITHM 
+    print("_____________________________")
+    print("APPROXIMATED GREEDY ALGORITHM")
+    result = calc_runtime(med_greedy, s1, s2, 50)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
+    print("RUNNING TIME :  %s seconds" % result[0])
+
+
 if __name__ == "__main__":main()
+
