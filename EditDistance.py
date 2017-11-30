@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Nov 24 13:32:55 2017
-
-@author: Rohil
-"""
-
 import numpy as np
 import random
 import string
@@ -144,22 +137,36 @@ def med_recursive(s1, s2):
 
 
 # APPROXIMATED GREEDY ALGORITHM
-def med_greedy(s1,s2):
-   m = init(s1, s2)
-    
-   for i in range(1, m.shape[0]):
-        for j in range(1, m.shape[1]):
-    #only considering the substitution as my greedy approach
-            if s1[i-1] == s2[j-1]:
-                # if same letters, we add nothing
-                con3 = m[i-1, j-1]
-            else:
-                # if different letters, we add one
-                con3 = m[i-1, j-1] + 1
-            
-            m[i][j] = con3
-    
-   return m[m.shape[0]-1][m.shape[1]-1]
+def med_greedy(s1,s2, lookahead=3):
+    n = len(s1)
+    m = len(s2)
+    difference = abs(m - n)
+    # base cases
+    if n == 0 and m == 0:
+        return 0
+    if n == 0:
+        return m
+    if m == 0:
+        return n
+    # Greedy Approach
+    if difference > lookahead-1 and m > lookahead-1 and n > lookahead-1:
+        if n > m:
+            return med_greedy(s1[:-lookahead], s2) + lookahead  # Deletion
+        if m > n:
+            return med_greedy(s1, s2[:-lookahead]) + lookahead  # Insertion
+        if m == n:
+            temp = 0
+            for k in range(1, lookahead+1):
+                if s1[-k] != s2[-k]:
+                    temp += 1
+            return med_greedy(s1[:-lookahead], s2[:-lookahead]) + temp  # Substitution
+    else:
+        if n > m:
+            return med_greedy(s1[:-1], s2) + 1  # Deletion
+        if m > n:
+            return med_greedy(s1, s2[:-1]) + 1  # Insertion
+        if m == n:
+            return med_greedy(s1[:-1], s2[:-1]) + (s1[-1] != s2[-1])  # Substitution
 
 
 # RUNTIME CALCULATOR
@@ -175,10 +182,10 @@ def string_generator(size=10, chars=string.ascii_uppercase):
 
 
 def main():
-    # s1 = string_generator()
-    # s2 = string_generator()
-    s2 = "INTENTION"
-    s1 = "EXECUTION"
+    s1 = string_generator(500)
+    s2 = string_generator(500)
+    # s2 = "INTENTION"
+    # s1 = "EXECUTION"
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
@@ -202,18 +209,18 @@ def main():
     # print("")
     # print(result[1][1])
 
-    # PURE RECURSIVE ALGORITHM
-    print("________________________")
-    print("PURE RECURSIVE ALGORITHM")
-    result = calc_runtime(med_recursive, s1, s2)
-    print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
-    print("RUNNING TIME :  %s seconds" % result[0])
+    # # PURE RECURSIVE ALGORITHM
+    # print("________________________")
+    # print("PURE RECURSIVE ALGORITHM")
+    # result = calc_runtime(med_recursive, s1, s2)
+    # print(" ")
+    # print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
+    # print("RUNNING TIME :  %s seconds" % result[0])
     
     # APPROXIMATED GREEDY ALGORITHM 
     print("_____________________________")
     print("APPROXIMATED GREEDY ALGORITHM")
-    result = calc_runtime(med_greedy, s1, s2)
+    result = calc_runtime(med_greedy, s1, s2, 50)
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
     print("RUNNING TIME :  %s seconds" % result[0])
