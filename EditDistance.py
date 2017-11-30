@@ -136,6 +136,48 @@ def med_recursive(s1, s2):
     return min(con1, con2, con3)
 
 
+# BRANCH AND BOUND ALGORITHM
+def med_branch(s1, s2, cost=0, bound=0):
+    cost += 1
+    n = len(s1)
+    m = len(s2)
+    # base cases
+    if n == 0 and m == 0:
+        return 0
+    if n == 0:
+        return m
+    if m == 0:
+        return n
+    # calculate heuristic values
+    # deletion node
+    h_con1 = abs((n - 1) - m)
+    f_con1 = h_con1 + cost
+    # insertion node
+    h_con2 = abs(n - (m - 1))
+    f_con2 = h_con2 + cost
+    # substitution node
+    h_con3 = abs((n - 1) - (m - 1))
+    if s1[-1] == s2[-1]:
+        f_con3 = h_con3 + cost - 1
+    else:
+        f_con3 = h_con3 + cost
+    # recursive definition
+    # mini = min(f_con1, f_con2, f_con3)
+    # print("{} {} {} {} {} {} {} {}".format("MINI : ", mini, "___  f_con1 :", f_con1, "___  f_con2 :", f_con2, "___  f_con3 :", f_con3))
+    # Branching
+    if bound >= f_con1:
+        # print("Branch 1")
+        return med_branch(s1[:-1], s2, cost, bound) + 1  # Deletion
+    if bound >= f_con2:
+        # print("Branch 2")
+        return med_branch(s1, s2[:-1], cost, bound) + 1  # Insertion
+    if bound >= f_con3:
+        # print("Branch 3")
+        # update bound
+        bound += 1
+        return med_branch(s1[:-1], s2[:-1], cost, bound) + (s1[-1] != s2[-1])  # Substitution
+
+
 # APPROXIMATED GREEDY ALGORITHM
 def med_greedy(s1,s2, lookahead=3):
     n = len(s1)
@@ -168,12 +210,11 @@ def med_greedy(s1,s2, lookahead=3):
         if m == n:
             return med_greedy(s1[:-1], s2[:-1]) + (s1[-1] != s2[-1])  # Substitution
 
-
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
-    startTime = time.time()
+    start_time = time.time()
     result = function(*args)
-    return time.time() - startTime, result
+    return time.time() - start_time, result
 
 
 # RANDOM STRING GENERATOR
@@ -182,10 +223,17 @@ def string_generator(size=10, chars=string.ascii_uppercase):
 
 
 def main():
-    s1 = string_generator(500)
-    s2 = string_generator(500)
-    # s2 = "INTENTION"
-    # s1 = "EXECUTION"
+    # s1 = string_generator()
+    # s2 = string_generator()
+    s1 = "TVQTSKNPQVDIAEDNAFFPSEYSLSQYTSPVSDLDGVDYPKPYRGKHKILVIAADERYLPTDNGKLFST\
+        GNHPIETLLPLYHLHAAGFEFEVATISGLMTKFEYWAMPHKDEKVMPFFEQHKSLFRNPKKLADVVASLN\
+        ADSEYAAIFVPGGHGALIGLPESQDVAAALQWAIKNDRFVISLCHGPAAFLALRHGDNPLNGYSICAFPD\
+        AADKQTPEIGYMPGHLTWYFGEELKKMGMNIINDDITGRVHKDRKLLTGDSPFAANALGKLAAQEMLAAY\
+        AG"
+    s2 = "MAPKKVLLALTSYNDVFYSDGAKTGVFVVEALHPFNTFRKEGFEVDFVSETGKFGWDEHSLAKDFLNGQD\
+        ETDFKNKDSDFNKTLAKIKTPKEVNADDYQIFFASAGHGTLFDYPKAKDLQDIASEIYANGGVVAAVCHG\
+        PAIFDGLTDKKTGRPLIEGKSITGFTDVGETILGVDSILKAKNLATVEDVAKKYGAKYLAPVGPWDDYSI\
+        TDGRLVTGVNPASAHSTAVRSIVALKNLEHHHHHH"
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
@@ -209,14 +257,22 @@ def main():
     # print("")
     # print(result[1][1])
 
-    # # PURE RECURSIVE ALGORITHM
-    # print("________________________")
-    # print("PURE RECURSIVE ALGORITHM")
+    # PURE RECURSIVE ALGORITHM
+    print("________________________")
+    print("PURE RECURSIVE ALGORITHM")
     # result = calc_runtime(med_recursive, s1, s2)
-    # print(" ")
+    print(" ")
     # print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
     # print("RUNNING TIME :  %s seconds" % result[0])
-    
+
+    # BRANCH AND BOUND ALGORITHM
+    print("__________________________")
+    print("BRANCH AND BOUND ALGORITHM")
+    result = calc_runtime(med_branch, s1, s2, 0, abs(len(s1) - len(s2)) + 1)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
+    print("RUNNING TIME :  %s seconds" % result[0])
+
     # APPROXIMATED GREEDY ALGORITHM 
     print("_____________________________")
     print("APPROXIMATED GREEDY ALGORITHM")
