@@ -210,6 +210,7 @@ def med_greedy(s1,s2, lookahead=3):
         if m == n:
             return med_greedy(s1[:-1], s2[:-1]) + (s1[-1] != s2[-1])  # Substitution
 
+          
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
     start_time = time.time()
@@ -273,6 +274,7 @@ def main():
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
     print("RUNNING TIME :  %s seconds" % result[0])
 
+
     # APPROXIMATED GREEDY ALGORITHM 
     print("_____________________________")
     print("APPROXIMATED GREEDY ALGORITHM")
@@ -283,3 +285,4 @@ def main():
 
 
 if __name__ == "__main__":main()
+
