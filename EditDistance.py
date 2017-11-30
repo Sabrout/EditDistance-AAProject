@@ -50,7 +50,7 @@ def med_classic(s1, s2):
 
 
 # K STRIP ALGORITHM
-def med_k(s1, s2, k=0):
+def med_k(s1, s2, k=1):
 
     # K value exception
     if k > max((len(s1)), (len(s2))) or k < 1:
@@ -86,9 +86,11 @@ def med_k(s1, s2, k=0):
             m[i][j] = min(con1, con2, con3)
             # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
             # Saving Result
-            if i == m.shape[0] - 1 and j == cap - 1: result = m[i][j]
+            if i == m.shape[0] - 1 and j == cap - 1:
+                result = m[i][j]
         offset += 1
-        if cap < m.shape[1]:cap += 1
+        if cap < m.shape[1]:
+            cap += 1
     # printing result and running time
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result)))
@@ -155,12 +157,12 @@ def main():
     print(result[1][1])
 
     # PURE RECURSIVE ALGORITHM
-    print("________________________")
-    print("PURE RECURSIVE ALGORITHM")
-    result = calc_runtime(med_recursive, s1, s2)
-    print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
-    print("RUNNING TIME :  %s seconds" % result[0])
+    # print("________________________")
+    # print("PURE RECURSIVE ALGORITHM")
+    # result = calc_runtime(med_recursive, s1, s2)
+    # print(" ")
+    # print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
+    # print("RUNNING TIME :  %s seconds" % result[0])
 
 
 if __name__ == "__main__":main()
