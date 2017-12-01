@@ -53,7 +53,7 @@ def med_classic(s1, s2):
 def med_k(s1, s2, k=1):
 
     # K value exception
-    if k > max((len(s1)), (len(s2))) or k < 1:
+    if k > min((len(s1)), (len(s2))) or k < 1:
         raise Exception('K VALUE OUT OF BOUNDS')
 
     # INITIALIZATION
@@ -62,9 +62,7 @@ def med_k(s1, s2, k=1):
     # Offset counter
     offset = - (k-2)
     # Limit counter
-    cap = k + 1
-    # Initiating Result Variable
-    result = None
+    cap = k + 1 + abs(len(s1) - len(s2))
     # Loop for K strips around the main diagonal
     for i in range(1, m.shape[0]):
         for j in range(max(1, offset), cap):
@@ -86,15 +84,13 @@ def med_k(s1, s2, k=1):
             m[i][j] = min(con1, con2, con3)
             # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
             # Saving Result
-            if i == m.shape[0] - 1 and j == cap - 1:
-                result = m[i][j]
         offset += 1
         if cap < m.shape[1]:
             cap += 1
     # printing result and running time
     print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result)))
-    return result, m
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", m[m.shape[0] - 1][m.shape[1] - 1]))
+    return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
 # PURE RECURSIVE ALGORITHM
@@ -132,7 +128,7 @@ def main():
     # s1 = string_generator()
     # s2 = string_generator()
     s1 = "INTENTION"
-    s2 = "EXECUTION"
+    s2 = "EXECUTIONION"
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
