@@ -8,7 +8,7 @@ import math
 # INITIALIZATION
 def init(s1, s2):
     m = np.empty((len(s1) + 1, len(s2) + 1))
-    m[:] = np.NAN
+    m[:] = np.inf
     # initializing the first row
     m[0] = np.arange(m.shape[1])
     # initializing the first column
@@ -50,10 +50,10 @@ def med_classic(s1, s2):
 
 
 # K STRIP ALGORITHM
-def med_k(s1, s2, k=0):
+def med_k(s1, s2, k=1):
 
     # K value exception
-    if k > max((len(s1)), (len(s2))) or k < 1:
+    if k > min((len(s1)), (len(s2))) or k < 1:
         raise Exception('K VALUE OUT OF BOUNDS')
 
     # INITIALIZATION
@@ -62,9 +62,7 @@ def med_k(s1, s2, k=0):
     # Offset counter
     offset = - (k-2)
     # Limit counter
-    cap = k + 1
-    # Initiating Result Variable
-    result = None
+    cap = k + 1 + abs(len(s1) - len(s2))
     # Loop for K strips around the main diagonal
     for i in range(1, m.shape[0]):
         for j in range(max(1, offset), cap):
@@ -86,16 +84,11 @@ def med_k(s1, s2, k=0):
             m[i][j] = min(con1, con2, con3)
             # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
             # Saving Result
-            if i == m.shape[0] - 1 and j == cap - 1:
-                result = m[i][j]
         offset += 1
         if cap < m.shape[1]:
             cap += 1
     # printing result and running time
-    print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", result))
-    return result, m
-
+    return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 # PURE RECURSIVE ALGORITHM
 def med_recursive(s1, s2):
@@ -205,7 +198,7 @@ def string_generator(size=10, chars=string.ascii_uppercase):
 
 def main():
     s1 = string_generator(6)
-    s2 = string_generator(6)
+    s2 = string_generator(8)
     # s1 = "TVQTSKNPQVDIAEDNAFFPSEYSLSQYTSPVSDLDGVDYPKPYRGKHKILVIAADERYLPTDNGKLFST\
     #     GNHPIETLLPLYHLHAAGFEFEVATISGLMTKFEYWAMPHKDEKVMPFFEQHKSLFRNPKKLADVVASLN\
     #     ADSEYAAIFVPGGHGALIGLPESQDVAAALQWAIKNDRFVISLCHGPAAFLALRHGDNPLNGYSICAFPD\
@@ -232,11 +225,13 @@ def main():
     print("K STRIP ALGORITHM")
     k = 1
     result = calc_runtime(med_k, s1, s2, k)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][0])))
     print("RUNNING TIME :  %s seconds" % result[0])
     print("K :  %s" % k)
     # Printing Matrix
-    # print("")
-    # print(result[1][1])
+    print("")
+    print(result[1][1])
 
     # PURE RECURSIVE ALGORITHM
     print("________________________")
