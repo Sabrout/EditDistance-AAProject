@@ -3,6 +3,8 @@ import random
 import string
 import time
 import math
+import copy
+import sys
 
 
 # INITIALIZATION
@@ -17,6 +19,56 @@ def init(s1, s2):
         i[0] = counter
         counter += 1
     return m
+
+
+
+
+def calcByRow(x,y):
+    prev = np.arange(0, len(y)+1)
+   # print(prev)
+    curr = np.zeros(len(y)+1)
+   # print(curr)
+    for i in range(1, len(x)+1):
+        for j in range(1, len(y)+1):
+           # if j == 0:
+            #    ins = np.inf
+            #else:
+            ins = curr[j-1] + 1
+
+            dele = prev[j] + 1
+
+           # if j == 0:
+            #    sub = np.inf
+           # else:
+               
+            if x[i-1] == y[j-1]:
+                    print(x[i-1], y[j-1])
+                    sub = prev[j-1]
+            else:
+                    sub = prev[j-1]+1
+            curr[j] = min(ins, dele, sub)
+        prev = copy.deepcopy(curr)
+       # print(curr)
+    return curr
+
+def split(scoreF, scoreR):
+    #scoreF front forward, scoreR Buttop mup Reversed
+  splitIndex = 0
+  # to locate the best partition (part of the solution)
+  minSum = 0
+  for i, (f, r) in enumerate(zip(scoreF, scoreR[::-1])):
+    # calculate the diagonal minimum index
+    #iterating over the scores and their indexes
+    if sum([f,r]) < monSum:
+        min_sum = sum([f,r])
+        splitIndex = i
+  return splitIndex
+
+
+
+
+
+
 
 
 # Minimum Edit Distance (MED)
