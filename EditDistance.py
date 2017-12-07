@@ -116,12 +116,12 @@ def med_classic(s1, s2):
 
     for i in range(2, len(s1) + 2):
         for j in range(2, len(s2) + 2):
-            vertical = mmm[i - 1][j] + 1  # DEL
-            horizontal = mmm[i][j - 1] + 1  # INS
+            vertical = mmm[i - 1][j] + 1
+            horizontal = mmm[i][j - 1] + 1
             if s1[i - 2] == s2[j - 2]:
                 diagonal = mmm[i - 1][j - 1]
             else:
-                diagonal = mmm[i - 1][j - 1] + 1  # SUB
+                diagonal = mmm[i - 1][j - 1] + 1
 
             mindist = min(diagonal, vertical, horizontal)
             mmm[i][j] = mindist
