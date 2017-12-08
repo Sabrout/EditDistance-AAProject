@@ -3,6 +3,7 @@ import random
 import string
 import time
 import math
+import copy
 
 
 # INITIALIZATION
@@ -48,6 +49,7 @@ def med_classic(s1, s2):
 
 # K STRIP ALGORITHM
 def med_k(s1, s2, k=1):
+
     # K value exception
     if k > min((len(s1)), (len(s2))) or k < 1:
         raise Exception('K VALUE OUT OF BOUNDS')
@@ -56,7 +58,7 @@ def med_k(s1, s2, k=1):
     m = init(s1, s2)
 
     # Offset counter
-    offset = - (k - 2)
+    offset = - (k-2)
     # Limit counter
     cap = k + 1 + abs(len(s1) - len(s2))
     # Loop for K strips around the main diagonal
@@ -84,6 +86,8 @@ def med_k(s1, s2, k=1):
         if cap < m.shape[1]:
             cap += 1
     # printing result and running time
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", m[m.shape[0] - 1][m.shape[1] - 1]))
     return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
@@ -181,6 +185,61 @@ def med_greedy(s1, s2, lookahead=3):
             return med_greedy(s1[:-1], s2[:-1]) + (s1[-1] != s2[-1])  # Substitution
 
 
+# DIVIDE AND CONQUER APPROACH
+def calcByRow(x, y):
+    prev = np.arange(0, len(y) + 1)
+    curr = np.zeros(len(y) + 1)
+    for i in range(1,len(y)+1):
+        prev[i]= prev[i-1]+1
+    for i in range(1, len(x) + 1):
+        curr[0] += 1
+        for j in range(1, len(y) + 1):
+            ins = curr[j - 1] + 1
+            dele = prev[j] + 1
+            if x[i - 1] == y[j - 1]:
+                sub = prev[j - 1]
+            else:
+                sub = prev[j - 1] + 1
+            curr[j] = min(ins, dele, sub)
+            prev = copy.deepcopy(curr)
+    # print(curr[-1])
+    print(curr)
+    return curr
+
+
+def split(scoreF, scoreR):
+    # scoreF front forward, scoreR Buttom up(Reversed)
+    splitIndex = 0
+    # to locate the best partition (part of the solution)
+    minSum = np.inf
+    for i, (f, r) in enumerate(zip(scoreF, scoreR[::-1])):
+        # calculate the diagonal minimum index
+        # iterating over the scores and their indexes
+        if sum([f, r]) < minSum:
+            minSum = sum([f, r])
+            splitIndex = i
+    return splitIndex
+
+
+def hirschberge(x, y):
+    firstString = ""
+    secondString = ""
+    operations = ""
+    if len(x) <= 2 or len(y) <= 2:
+        r = med_classic(x, y)
+        return r
+    else:
+        xmiddle = int(len(x)/2)
+        scoreL = calcByRow(x[:xmiddle+1], y)
+        scoreR = calcByRow(x[xmiddle+1:][::-1], y[::-1])
+        ymid = split(scoreL, scoreR)
+        rowLeft, operationsLU, columnUp  = hirschberge(x[:xmiddle+1], y[:ymid+1])
+        rowRight, operationsRD, columnDown  = hirschberge(x[xmiddle+1:], y[ymid+1:])
+        firstString = str(rowLeft) + str(rowRight)
+        operations = str(operationsLU) + str(operationsRD)
+        secondString = str(columnUp) + str(columnDown)
+    return firstString, operations, secondString
+
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
     start_time = time.time()
@@ -194,8 +253,10 @@ def string_generator(size=10, chars=string.ascii_uppercase):
 
 
 def main():
-    s1 = string_generator(6)
-    s2 = string_generator(8)
+    # s1 = "INTENTION"
+    # s2 = "EXECUTION"
+    s1 = string_generator(10)
+    s2 = string_generator(5)
     # s1 = "TVQTSKNPQVDIAEDNAFFPSEYSLSQYTSPVSDLDGVDYPKPYRGKHKILVIAADERYLPTDNGKLFST\
     #     GNHPIETLLPLYHLHAAGFEFEVATISGLMTKFEYWAMPHKDEKVMPFFEQHKSLFRNPKKLADVVASLN\
     #     ADSEYAAIFVPGGHGALIGLPESQDVAAALQWAIKNDRFVISLCHGPAAFLALRHGDNPLNGYSICAFPD\
@@ -212,6 +273,9 @@ def main():
     print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
     result = calc_runtime(med_classic, s1, s2)
+
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][0])))
     print("RUNNING TIME :  %s seconds" % result[0])
     # Printing Matrix
     # print("")
@@ -252,6 +316,14 @@ def main():
     result = calc_runtime(med_greedy, s1, s2, 50)
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1])))
+    print("RUNNING TIME :  %s seconds" % result[0])
+
+    # DIVIDE AND CONQUER ALGORITHM
+    print("____________________________")
+    print("DIVIDE AND CONQUER ALGORITHM")
+    result = calc_runtime(calcByRow, s1, s2)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][-1])))
     print("RUNNING TIME :  %s seconds" % result[0])
 
 

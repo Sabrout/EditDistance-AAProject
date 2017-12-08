@@ -100,7 +100,7 @@ def iterator(head_start, function, function2, s1, s2, *args):
 # AVERAGE RUNTIME NORMALIZER
 def normalize(function, s1, s2, *args):
     result = 0
-    time = np.zeros(100)
+    time = np.zeros(5)
     for i in range(0, time.size):
         temp1, temp2 = ed.calc_runtime(function, s1, s2, *args)
         time[i] = temp1
@@ -188,7 +188,7 @@ def main():
     # experiment_k()
     data = protein_database_parser()
     result = protein_database_processor(data)
-    print(result.max())
+    # print(result.max())
 
 
 if __name__ == "__main__":main()
