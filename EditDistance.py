@@ -209,6 +209,76 @@ def med_k(s1, s2, k=1):
         offset += 1
         if cap < m.shape[1]:
             cap += 1
+    
+    # Alignment
+    zero = 0
+    mm = np.c_[[zero] * len(m[:]), m]
+    mmm = np.r_[[[zero] * len(mm[1, :])], mm]
+
+    backmatrix = [[' ' for y in range(len(s2) + 2)] for x in range(len(s1) + 2)]
+    backmatrix[1][1] = 0
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][0] = s1[i - 2]
+    for j in range(2, len(s2) + 2):
+        backmatrix[0][j] = s2[j - 2]
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][1] = '|'
+
+    for j in range(2, len(s2) + 2):
+        backmatrix[1][j] = '-'
+
+    for i in range(2, len(s1) + 2):
+        for j in range(2, len(s2) + 2):
+            vertical = mmm[i - 1][j] + 1  # DEL
+            horizontal = mmm[i][j - 1] + 1  # INS
+            if s1[i - 2] == s2[j - 2]:
+                diagonal = mmm[i - 1][j - 1]
+            else:
+                diagonal = mmm[i - 1][j - 1] + 1  # SUB
+
+            mindist = min(diagonal, vertical, horizontal)
+            mmm[i][j] = mindist
+
+            if mindist == diagonal:
+                backmatrix[i][j] = 'bn'
+            elif mindist == vertical:
+                backmatrix[i][j] = '|'
+            else:
+                backmatrix[i][j] = '-'
+    ss1 = ""
+    ss2 = ""
+    op = ""
+
+    i = len(s1) + 1
+    j = len(s2) + 1
+    while not (i == 1 and j == 1):
+        c = backmatrix[i][j]
+        if c == '|':
+            ss1 += s1[i - 2] + ' '
+            ss2 += '-' + ' '
+            op += ' ' + ' '
+            i = i - 1
+        elif c == 'bn':
+            ss1 += s1[i - 2] + ' '
+            ss2 += s2[j - 2] + ' '
+            if s1[i - 2] == s2[j - 2]:
+                op += '|' + ' '
+            else:
+                op += ' ' + ' '
+            i = i - 1
+            j = j - 1
+        else:
+            ss1 += '-' + ' '
+            ss2 += s2[j - 2] + ' '
+            op += ' ' + ' '
+            j = j - 1
+
+    print(ss1[::-1])
+    print(op[::-1])
+    print(ss2[::-1])
+    
     # printing result and running time
     return m[m.shape[0] - 1][m.shape[1] - 1], m
 
