@@ -49,7 +49,10 @@ def med_classic(s1, s2):
 
 # K STRIP ALGORITHM
 def med_k(s1, s2, k=1):
-
+    if len(s1) > len(s2):
+        temp = s1
+        s1 = s2
+        s2 = temp
     # K value exception
     if k > min((len(s1)), (len(s2))) or k < 1:
         raise Exception('K VALUE OUT OF BOUNDS')
