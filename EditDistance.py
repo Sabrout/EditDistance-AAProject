@@ -88,9 +88,6 @@ def med_k(s1, s2, k=1):
         offset += 1
         if cap < m.shape[1]:
             cap += 1
-    # printing result and running time
-    print(" ")
-    print("{} {}".format("MINIMUM EDIT DISTANCE :", m[m.shape[0] - 1][m.shape[1] - 1]))
     return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
@@ -206,7 +203,7 @@ def calcByRow(x, y):
             curr[j] = min(ins, dele, sub)
             prev = copy.deepcopy(curr)
     # print(curr[-1])
-    print(curr)
+    # print(curr)
     return curr
 
 
@@ -294,8 +291,8 @@ def main():
     print("RUNNING TIME :  %s seconds" % result[0])
     print("K :  %s" % k)
     # Printing Matrix
-    print("")
-    print(result[1][1])
+    # print("")
+    # print(result[1][1])
 
     # PURE RECURSIVE ALGORITHM
     print("________________________")
