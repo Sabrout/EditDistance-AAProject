@@ -1,9 +1,9 @@
 import EditDistance as ed
-import random
 import string
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+
 
 # RANDOM STRING GENERATOR
 def string_generator(size=10, chars=string.ascii_uppercase):
@@ -63,7 +63,7 @@ def experiment100():
 
     print("____________________________")
     print("DIVIDE AND CONQUER ALGORITHM")
-    result5 = iterator(10, 100, normalize_recursion, ed.calcByRow, s1, s2)
+    result5 = iterator(10, 100, normalize_recursion, ed.calcByRow_experiment, s1, s2)
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE AVERAGE:", result5[0]))
     print("RUNNING TIME :  %s seconds" % np.sum(result5[1]))
@@ -167,7 +167,7 @@ def iterator(head_start, end, function, function2, s1, s2, *args):
 # AVERAGE RUNTIME NORMALIZER
 def normalize(function, s1, s2, *args):
     result = 0
-    time = np.zeros(50)
+    time = np.zeros(5)
     for i in range(0, time.size):
         temp1, temp2 = ed.calc_runtime(function, s1, s2, *args)
         time[i] = temp1
@@ -177,7 +177,7 @@ def normalize(function, s1, s2, *args):
 
 def normalize_recursion(function, s1, s2, *args):
     result = 0
-    time = np.zeros(50)
+    time = np.zeros(5)
     for i in range(0, time.size):
         temp1, temp2 = ed.calc_runtime(function, s1, s2, *args)
         time[i] = temp1

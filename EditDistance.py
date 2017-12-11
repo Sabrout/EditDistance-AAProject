@@ -421,6 +421,25 @@ def calcByRow(x, y):
                 curr[j] = min(ins, dele, sub)
             prev = copy.deepcopy(curr)
     # hirschberge(x, y)
+    return curr
+
+def calcByRow_experiment(x, y):
+    prev = np.arange(0, len(y) + 1)
+    curr = np.zeros(len(y) + 1)
+    for i in range(1,len(y)+1):
+        prev[i]= prev[i-1]+1
+    for i in range(1, len(x) + 1):
+            curr[0] += 1
+            for j in range(1, len(y) + 1):
+                ins = curr[j - 1] + 1
+                dele = prev[j] + 1
+                if x[i - 1] == y[j - 1]:
+                    sub = prev[j - 1]
+                else:
+                    sub = prev[j - 1] + 1
+                curr[j] = min(ins, dele, sub)
+            prev = copy.deepcopy(curr)
+    # hirschberge(x, y)
     return curr[-1]
 
 def split(scoreF, scoreR):
@@ -457,9 +476,9 @@ def hirschberge(x,y):
         secondString = columnUp + columnDown
 
     # if sys.exi
-    print(firstString)
-    print(operations)
-    print(secondString)
+    # print(firstString)
+    # print(operations)
+    # print(secondString)
     #  editDistance = calcByRow(firstString,secondString)
     # print(editDistance[-1])
     return firstString, operations, secondString
@@ -553,6 +572,7 @@ def med_classicdq(s1,s2):
             op += ' ' + ' '
             j = j - 1
     return ss1[::-1],op[::-1], ss2[::-1]
+
 
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
