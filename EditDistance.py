@@ -2,7 +2,6 @@ import numpy as np
 import random
 import string
 import time
-import math
 import copy
 
 
@@ -193,6 +192,7 @@ def med_k(s1, s2, k=1):
 
 
 def med_k_gui(s1, s2, k=1):
+    k = int(k)
     # K value exception
     if k > min((len(s1)), (len(s2))) or k < 1:
         raise Exception('K VALUE OUT OF BOUNDS')
@@ -299,7 +299,7 @@ def med_k_gui(s1, s2, k=1):
     print(ss2[::-1])
 
     # printing result and running time
-    return m[m.shape[0] - 1][m.shape[1] - 1], m
+    return m[m.shape[0] - 1][m.shape[1] - 1], m, ss1[::-1], op[::-1], ss2[::-1]
 
 
 # PURE RECURSIVE ALGORITHM
@@ -321,6 +321,7 @@ def med_recursive(s1, s2):
     return min(con1, con2, con3)
 
 
+# BRANCH AND BOUND ALGORITHM
 def med_branch(s1, s2, cost=0, bound=0):
     cost += 1
     n = len(s1)
@@ -580,6 +581,39 @@ def calc_runtime(function, *args):
     result = function(*args)
     return time.time() - start_time, result
 
+# Runtime Calculation for GUI (Rohil)
+def calc_runtime_md(function, *args):
+    if function == med_classic_gui:
+        start_time = time.time()
+        result = function(*args)[0]
+        result2 = function(*args)[1]
+        result3 = function(*args)[2]
+        result4 = function(*args)[3]
+        return time.time() - start_time, result, result2, result3, result4
+    if function == med_k_gui:
+        start_time = time.time()
+        result = function(*args)[0]
+        result1 = function(*args)[1]
+        result2 = function(*args)[2]
+        result3 = function(*args)[3]
+        result4 = function(*args)[4]
+        return time.time() - start_time, result, result1, result2, result3, result4
+
+    if function == calcByRow:
+        start_time = time.time()
+        result = function(*args)[-1]
+        result1 = function(*args)[1]
+        # result2= function(*args)[2]
+        # result3= function(*args)[3]
+
+        return time.time() - start_time, result
+
+    if function == med_recursive or function == med_greedy or function == med_branch:
+        # print(" Anything")
+        start_time = time.time()
+        result = function(*args)
+        return time.time() - start_time, result
+
 
 # RANDOM STRING GENERATOR
 def string_generator(size=10, chars=string.ascii_uppercase):
@@ -589,17 +623,9 @@ def string_generator(size=10, chars=string.ascii_uppercase):
 def main():
     # s1 = "INTENTION"
     # s2 = "EXECUTION"
-    s1 = string_generator(5)
+    s1 = string_generator(6)
     s2 = string_generator(6)
-    # s1 = "TVQTSKNPQVDIAEDNAFFPSEYSLSQYTSPVSDLDGVDYPKPYRGKHKILVIAADERYLPTDNGKLFST\
-    #     GNHPIETLLPLYHLHAAGFEFEVATISGLMTKFEYWAMPHKDEKVMPFFEQHKSLFRNPKKLADVVASLN\
-    #     ADSEYAAIFVPGGHGALIGLPESQDVAAALQWAIKNDRFVISLCHGPAAFLALRHGDNPLNGYSICAFPD\
-    #     AADKQTPEIGYMPGHLTWYFGEELKKMGMNIINDDITGRVHKDRKLLTGDSPFAANALGKLAAQEMLAAY\
-    #     AG"
-    # s2 = "MAPKKVLLALTSYNDVFYSDGAKTGVFVVEALHPFNTFRKEGFEVDFVSETGKFGWDEHSLAKDFLNGQD\
-    #     ETDFKNKDSDFNKTLAKIKTPKEVNADDYQIFFASAGHGTLFDYPKAKDLQDIASEIYANGGVVAAVCHG\
-    #     PAIFDGLTDKKTGRPLIEGKSITGFTDVGETILGVDSILKAKNLATVEDVAKKYGAKYLAPVGPWDDYSI\
-    #     TDGRLVTGVNPASAHSTAVRSIVALKNLEHHHHHH"
+
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
 
