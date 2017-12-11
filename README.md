@@ -43,15 +43,16 @@ algorithm.
 • Omar Elsabrout \
 • Loujain Liekah \
 • Rohil Gupta \
-• Hyeonju Ryu  \
+• Hyeonju Ryu
+
 
 **4. TO-DO List** :\
 • Alignment  \
-• K strip calculation order \
+• K strip calculation order [DONE] \
 • Divide and Connquer \
-• Greedy Algorithm [DONE] \
-• Pure Recursive Optimization [DONE] \
-• Branch and Bound Heuristic [DONE] \
+• Greedy Algorithm \
+• Pure Recursive Optimization \
+• Branch and Bound Heuristic \
 • Experimental Protocol (Analyze Protin Samples on Cloud Servers) \
 • GUI (Project Data) \
-• Report
+• Report 
