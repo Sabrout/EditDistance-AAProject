@@ -47,6 +47,107 @@ def med_classic(s1, s2):
     return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
+def med_classic_gui(s1, s2):
+    # INITIALIZATION
+    m = init(s1, s2)
+    for i in range(1, m.shape[0]):
+        for j in range(1, m.shape[1]):
+
+            # first condition : i is an insertion
+            con1 = m[i - 1, j] + 1
+
+            # second condition : j is a deletion
+            con2 = m[i, j - 1] + 1
+
+            # third condition : i and j are a substitution
+            if s1[i - 1] == s2[j - 1]:
+                # if same letters, we add nothing
+                con3 = m[i - 1, j - 1]
+            else:
+                # if different letters, we add one
+                con3 = m[i - 1, j - 1] + 1
+
+            # assign minimum value
+            m[i][j] = min(con1, con2, con3)
+
+    # Alignment
+    zero = 0
+    mm = np.c_[[zero] * len(m[:]), m]
+    mmm = np.r_[[[zero] * len(mm[1, :])], mm]
+    backmatrix = [[' ' for y in range(len(s2) + 2)] for x in range(len(s1) + 2)]
+    backmatrix[1][1] = 0
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][0] = s1[i - 2]
+    for j in range(2, len(s2) + 2):
+        backmatrix[0][j] = s2[j - 2]
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][1] = '|'
+
+    for j in range(2, len(s2) + 2):
+        backmatrix[1][j] = '-'
+
+    for i in range(2, len(s1) + 2):
+        for j in range(2, len(s2) + 2):
+            vertical = mmm[i - 1][j] + 1
+            horizontal = mmm[i][j - 1] + 1
+            if s1[i - 2] == s2[j - 2]:
+                diagonal = mmm[i - 1][j - 1]
+            else:
+                diagonal = mmm[i - 1][j - 1] + 1
+
+            mindist = min(diagonal, vertical, horizontal)
+            mmm[i][j] = mindist
+
+            if mindist == diagonal:
+                backmatrix[i][j] = 'bn'
+            elif mindist == vertical:
+                backmatrix[i][j] = '|'
+            else:
+                backmatrix[i][j] = '-'
+
+    ss1 = ""
+    ss2 = ""
+    op = ""
+
+    i = len(s1) + 1
+    j = len(s2) + 1
+    while not (i == 1 and j == 1):
+        c = backmatrix[i][j]
+        if c == '|':
+            ss1 += s1[i - 2] + ' '
+            ss2 += '-' + ' '
+            op += ' ' + ' '
+            i = i - 1
+        elif c == 'bn':
+            ss1 += s1[i - 2] + ' '
+            ss2 += s2[j - 2] + ' '
+            if s1[i - 2] == s2[j - 2]:
+                op += '|' + ' '
+            else:
+                op += ' ' + ' '
+            i = i - 1
+            j = j - 1
+        else:
+            ss1 += '-' + ' '
+            ss2 += s2[j - 2] + ' '
+            op += ' ' + ' '
+            j = j - 1
+
+    print("")
+    print("ALIGNMENT:")
+    print("")
+    print(ss1[::-1])
+    print(op[::-1])
+    print(ss2[::-1])
+
+    # printing result and running time
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE :", int(m[m.shape[0] - 1][m.shape[1] - 1])))
+    return m[m.shape[0] - 1][m.shape[1] - 1], ss1[::-1], op[::-1], ss2[::-1]
+
+
 # K STRIP ALGORITHM
 def med_k(s1, s2, k=1):
     if len(s1) > len(s2):
@@ -91,6 +192,116 @@ def med_k(s1, s2, k=1):
     return m[m.shape[0] - 1][m.shape[1] - 1], m
 
 
+def med_k_gui(s1, s2, k=1):
+    # K value exception
+    if k > min((len(s1)), (len(s2))) or k < 1:
+        raise Exception('K VALUE OUT OF BOUNDS')
+
+    # INITIALIZATION
+    m = init(s1, s2)
+
+    # Offset counter
+    offset = - (k - 2)
+    # Limit counter
+    cap = k + 1 + abs(len(s1) - len(s2))
+    # Loop for K strips around the main diagonal
+    for i in range(1, m.shape[0]):
+        for j in range(max(1, offset), cap):
+            # first condition : i is an insertion
+            con1 = m[i - 1, j] + 1
+
+            # second condition : j is a deletion
+            con2 = m[i, j - 1] + 1
+
+            # third condition : i and j are a substitution
+            if s1[i - 1] == s2[j - 1]:
+                # if same letters, we add nothing
+                con3 = m[i - 1, j - 1]
+            else:
+                # if different letters, we add one
+                con3 = m[i - 1, j - 1] + 1
+
+            # assign minimum value
+            m[i][j] = min(con1, con2, con3)
+            # print("con1: {} con2: {} con3: {} min: {}".format(con1, con2, con3, m[i][i]))
+            # Saving Result
+        offset += 1
+        if cap < m.shape[1]:
+            cap += 1
+
+    # Alignment
+    zero = 0
+    mm = np.c_[[zero] * len(m[:]), m]
+    mmm = np.r_[[[zero] * len(mm[1, :])], mm]
+
+    backmatrix = [[' ' for y in range(len(s2) + 2)] for x in range(len(s1) + 2)]
+    backmatrix[1][1] = 0
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][0] = s1[i - 2]
+    for j in range(2, len(s2) + 2):
+        backmatrix[0][j] = s2[j - 2]
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][1] = '|'
+
+    for j in range(2, len(s2) + 2):
+        backmatrix[1][j] = '-'
+
+    for i in range(2, len(s1) + 2):
+        for j in range(2, len(s2) + 2):
+            vertical = mmm[i - 1][j] + 1  # DEL
+            horizontal = mmm[i][j - 1] + 1  # INS
+            if s1[i - 2] == s2[j - 2]:
+                diagonal = mmm[i - 1][j - 1]
+            else:
+                diagonal = mmm[i - 1][j - 1] + 1  # SUB
+
+            mindist = min(diagonal, vertical, horizontal)
+            mmm[i][j] = mindist
+
+            if mindist == diagonal:
+                backmatrix[i][j] = 'bn'
+            elif mindist == vertical:
+                backmatrix[i][j] = '|'
+            else:
+                backmatrix[i][j] = '-'
+    ss1 = ""
+    ss2 = ""
+    op = ""
+
+    i = len(s1) + 1
+    j = len(s2) + 1
+    while not (i == 1 and j == 1):
+        c = backmatrix[i][j]
+        if c == '|':
+            ss1 += s1[i - 2] + ' '
+            ss2 += '-' + ' '
+            op += ' ' + ' '
+            i = i - 1
+        elif c == 'bn':
+            ss1 += s1[i - 2] + ' '
+            ss2 += s2[j - 2] + ' '
+            if s1[i - 2] == s2[j - 2]:
+                op += '|' + ' '
+            else:
+                op += ' ' + ' '
+            i = i - 1
+            j = j - 1
+        else:
+            ss1 += '-' + ' '
+            ss2 += s2[j - 2] + ' '
+            op += ' ' + ' '
+            j = j - 1
+
+    print(ss1[::-1])
+    print(op[::-1])
+    print(ss2[::-1])
+
+    # printing result and running time
+    return m[m.shape[0] - 1][m.shape[1] - 1], m
+
+
 # PURE RECURSIVE ALGORITHM
 def med_recursive(s1, s2):
     n = len(s1)
@@ -110,7 +321,6 @@ def med_recursive(s1, s2):
     return min(con1, con2, con3)
 
 
-# BRANCH AND BOUND ALGORITHM
 def med_branch(s1, s2, cost=0, bound=0):
     cost += 1
     n = len(s1)
@@ -136,20 +346,28 @@ def med_branch(s1, s2, cost=0, bound=0):
     else:
         f_con3 = h_con3 + cost
     # recursive definition
-    # mini = min(f_con1, f_con2, f_con3)
-    # print("{} {} {} {} {} {} {} {}".format("MINI : ", mini, "___  f_con1 :", f_con1, "___  f_con2 :", f_con2, "___  f_con3 :", f_con3))
+    # print(bound)
+    # print("{} {} {} {} {} {}".format("f_con1 :", f_con1, "___  f_con2 :", f_con2, "___  f_con3 :", f_con3))
     # Branching
+    temp = max(len(s1), len(s2))
+    con1, con2, con3 = temp, temp, temp
     if bound >= f_con1:
         # print("Branch 1")
-        return med_branch(s1[:-1], s2, cost, bound) + 1  # Deletion
+        con1 = med_branch(s1[:-1], s2, cost, bound) + 1  # Deletion
     if bound >= f_con2:
         # print("Branch 2")
-        return med_branch(s1, s2[:-1], cost, bound) + 1  # Insertion
+        con2 = med_branch(s1, s2[:-1], cost, bound) + 1  # Insertion
     if bound >= f_con3:
         # print("Branch 3")
         # update bound
         bound += 1
-        return med_branch(s1[:-1], s2[:-1], cost, bound) + (s1[-1] != s2[-1])  # Substitution
+        con3 = med_branch(s1[:-1], s2[:-1], cost, bound) + (s1[-1] != s2[-1])  # Substitution
+    # Raising Errors for debugging
+    if type(min(con1, con2, con3)) != int:
+        print(min(con1, con2, con3))
+        print("INTEGER EXCEPTION")
+        raise ("INTEGER EXCEPTION")
+    return min(con1, con2, con3)
 
 
 # APPROXIMATED GREEDY ALGORITHM
@@ -192,20 +410,18 @@ def calcByRow(x, y):
     for i in range(1,len(y)+1):
         prev[i]= prev[i-1]+1
     for i in range(1, len(x) + 1):
-        curr[0] += 1
-        for j in range(1, len(y) + 1):
-            ins = curr[j - 1] + 1
-            dele = prev[j] + 1
-            if x[i - 1] == y[j - 1]:
-                sub = prev[j - 1]
-            else:
-                sub = prev[j - 1] + 1
-            curr[j] = min(ins, dele, sub)
+            curr[0] += 1
+            for j in range(1, len(y) + 1):
+                ins = curr[j - 1] + 1
+                dele = prev[j] + 1
+                if x[i - 1] == y[j - 1]:
+                    sub = prev[j - 1]
+                else:
+                    sub = prev[j - 1] + 1
+                curr[j] = min(ins, dele, sub)
             prev = copy.deepcopy(curr)
-    # print(curr[-1])
-    # print(curr)
-    return curr
-
+    # hirschberge(x, y)
+    return curr[-1]
 
 def split(scoreF, scoreR):
     # scoreF front forward, scoreR Buttom up(Reversed)
@@ -220,25 +436,123 @@ def split(scoreF, scoreR):
             splitIndex = i
     return splitIndex
 
-
-def hirschberge(x, y):
+# Minimum Edit Distance (MED)
+# Divide and Conquer DP
+def hirschberge(x,y):
     firstString = ""
     secondString = ""
     operations = ""
     if len(x) <= 2 or len(y) <= 2:
-        r = med_classic(x, y)
+        r = med_classicdq(x, y)
         return r
     else:
         xmiddle = int(len(x)/2)
-        scoreL = calcByRow(x[:xmiddle+1], y)
-        scoreR = calcByRow(x[xmiddle+1:][::-1], y[::-1])
+        scoreL = calcByRow(x[:xmiddle], y)
+        scoreR = calcByRow(x[xmiddle:][::-1], y[::-1])
         ymid = split(scoreL, scoreR)
-        rowLeft, operationsLU, columnUp  = hirschberge(x[:xmiddle+1], y[:ymid+1])
-        rowRight, operationsRD, columnDown  = hirschberge(x[xmiddle+1:], y[ymid+1:])
-        firstString = str(rowLeft) + str(rowRight)
-        operations = str(operationsLU) + str(operationsRD)
-        secondString = str(columnUp) + str(columnDown)
+        rowLeft, operationsLU, columnUp  = hirschberge(x[:xmiddle], y[:ymid])
+        rowRight, operationsRD, columnDown  = hirschberge(x[xmiddle:], y[ymid:])
+        firstString = rowLeft + rowRight
+        operations = operationsLU + operationsRD
+        secondString = columnUp + columnDown
+
+    # if sys.exi
+    print(firstString)
+    print(operations)
+    print(secondString)
+    #  editDistance = calcByRow(firstString,secondString)
+    # print(editDistance[-1])
     return firstString, operations, secondString
+
+# CLASSIC DYNAMIC PROGRAMMING ALGORITHM USED FOR DIVIDE AND CONQURE
+def med_classicdq(s1,s2):
+    # INITIALIZATION
+    m = init(s1, s2)
+    for i in range(1, m.shape[0]):
+        for j in range(1, m.shape[1]):
+
+            # first condition : i is an insertion
+            con1 = m[i - 1, j] + 1
+
+            # second condition : j is a deletion
+            con2 = m[i, j - 1] + 1
+
+            # third condition : i and j are a substitution
+            if s1[i - 1] == s2[j - 1]:
+                # if same letters, we add nothing
+                con3 = m[i - 1, j - 1]
+            else:
+                # if different letters, we add one
+                con3 = m[i - 1, j - 1] + 1
+
+            # assign minimum value
+            m[i][j] = min(con1, con2, con3)
+
+    # Alignment
+    zero = 0
+    mm = np.c_[[zero] * len(m[:]), m]
+    mmm = np.r_[[[zero] * len(mm[1, :])], mm]
+    backmatrix = [[' ' for y in range(len(s2) + 2)] for x in range(len(s1) + 2)]
+    backmatrix[1][1] = 0
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][0] = s1[i - 2]
+    for j in range(2, len(s2) + 2):
+        backmatrix[0][j] = s2[j - 2]
+
+    for i in range(2, len(s1) + 2):
+        backmatrix[i][1] = '|'
+
+    for j in range(2, len(s2) + 2):
+        backmatrix[1][j] = '-'
+
+    for i in range(2, len(s1) + 2):
+        for j in range(2, len(s2) + 2):
+            vertical = mmm[i - 1][j] + 1
+            horizontal = mmm[i][j - 1] + 1
+            if s1[i - 2] == s2[j - 2]:
+                diagonal = mmm[i - 1][j - 1]
+            else:
+                diagonal = mmm[i - 1][j - 1] + 1
+
+            mindist = min(diagonal, vertical, horizontal)
+            mmm[i][j] = mindist
+
+            if mindist == diagonal:
+                backmatrix[i][j] = 'bn'
+            elif mindist == vertical:
+                backmatrix[i][j] = '|'
+            else:
+                backmatrix[i][j] = '-'
+
+    ss1 = ""
+    ss2 = ""
+    op = ""
+
+    i = len(s1) + 1
+    j = len(s2) + 1
+    while not (i == 1 and j == 1):
+        c = backmatrix[i][j]
+        if c == '|':
+            ss1 += s1[i - 2] + ' '
+            ss2 += '-' + ' '
+            op += ' ' + ' '
+            i = i - 1
+        elif c == 'bn':
+            ss1 += s1[i - 2] + ' '
+            ss2 += s2[j - 2] + ' '
+            if s1[i - 2] == s2[j - 2]:
+                op += '|' + ' '
+            else:
+                op += ' ' + ' '
+            i = i - 1
+            j = j - 1
+        else:
+            ss1 += '-' + ' '
+            ss2 += s2[j - 2] + ' '
+            op += ' ' + ' '
+            j = j - 1
+    return ss1[::-1],op[::-1], ss2[::-1]
 
 # RUNTIME CALCULATOR
 def calc_runtime(function, *args):
@@ -255,8 +569,8 @@ def string_generator(size=10, chars=string.ascii_uppercase):
 def main():
     # s1 = "INTENTION"
     # s2 = "EXECUTION"
-    s1 = string_generator(10)
-    s2 = string_generator(5)
+    s1 = string_generator(5)
+    s2 = string_generator(6)
     # s1 = "TVQTSKNPQVDIAEDNAFFPSEYSLSQYTSPVSDLDGVDYPKPYRGKHKILVIAADERYLPTDNGKLFST\
     #     GNHPIETLLPLYHLHAAGFEFEVATISGLMTKFEYWAMPHKDEKVMPFFEQHKSLFRNPKKLADVVASLN\
     #     ADSEYAAIFVPGGHGALIGLPESQDVAAALQWAIKNDRFVISLCHGPAAFLALRHGDNPLNGYSICAFPD\
@@ -272,7 +586,7 @@ def main():
     # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
     print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
-    result = calc_runtime(med_classic, s1, s2)
+    result = calc_runtime(med_classic_gui, s1, s2)
 
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][0])))
@@ -285,7 +599,7 @@ def main():
     print("_________________")
     print("K STRIP ALGORITHM")
     k = 1
-    result = calc_runtime(med_k, s1, s2, k)
+    result = calc_runtime(med_k_gui, s1, s2, k)
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][0])))
     print("RUNNING TIME :  %s seconds" % result[0])

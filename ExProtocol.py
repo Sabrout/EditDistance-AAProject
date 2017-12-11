@@ -48,12 +48,27 @@ def experiment100():
     print(" ")
     print("_____________________________")
     print("APPROXIMATED GREEDY ALGORITHM")
-    result3 = iterator(10, 100, normalize_recursion, ed.med_greedy, s1, s2)
+    result3 = iterator(10, 100, normalize_recursion, ed.med_greedy, s1, s2, 20)
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE AVERAGE:", result3[0]))
     print("RUNNING TIME :  %s seconds" % np.sum(result3[1]))
 
-    plotter_figure1(result[1], result2[1], result3[1])
+    print(" ")
+    print("___________________________")
+    print("BRANCH AND BOUND ALGORITHM")
+    result4 = iterator(10, 100, normalize_recursion, ed.med_branch, s1, s2, 0, abs(len(s1) - len(s2)) + 2)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE AVERAGE:", result4[0]))
+    print("RUNNING TIME :  %s seconds" % np.sum(result4[1]))
+
+    print("____________________________")
+    print("DIVIDE AND CONQUER ALGORITHM")
+    result5 = iterator(10, 100, normalize_recursion, ed.calcByRow, s1, s2)
+    print(" ")
+    print("{} {}".format("MINIMUM EDIT DISTANCE AVERAGE:", result5[0]))
+    print("RUNNING TIME :  %s seconds" % np.sum(result5[1]))
+
+    plotter_figure1(result[1], result2[1], result3[1], result4[1], result5[1])
 
 
 def experiment_k():
@@ -122,7 +137,7 @@ def experiment_recursive():
 
     print("__________________________")
     print("BRANCH AND BOUND ALGORITHM")
-    result = iterator(1, 10, normalize_recursion, ed.med_branch, s1, s2, 0, abs(len(s1) - len(s2)) + 1)
+    result = iterator(1, 10, normalize_recursion, ed.med_branch, s1, s2, 0, abs(len(s1) - len(s2)) + 1000)
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE AVERAGE:", result[0]))
     print("RUNNING TIME :  %s seconds" % np.sum(result[1]))
@@ -152,7 +167,7 @@ def iterator(head_start, end, function, function2, s1, s2, *args):
 # AVERAGE RUNTIME NORMALIZER
 def normalize(function, s1, s2, *args):
     result = 0
-    time = np.zeros(5)
+    time = np.zeros(50)
     for i in range(0, time.size):
         temp1, temp2 = ed.calc_runtime(function, s1, s2, *args)
         time[i] = temp1
@@ -162,7 +177,7 @@ def normalize(function, s1, s2, *args):
 
 def normalize_recursion(function, s1, s2, *args):
     result = 0
-    time = np.zeros(5)
+    time = np.zeros(50)
     for i in range(0, time.size):
         temp1, temp2 = ed.calc_runtime(function, s1, s2, *args)
         time[i] = temp1
@@ -170,14 +185,18 @@ def normalize_recursion(function, s1, s2, *args):
     return result, np.average(time)
 
 
-def plotter_figure1(time, time2, time3):
+def plotter_figure1(time, time2, time3, time4, time5):
     line_classic, = plt.plot(np.arange(10, 100), time, label='Classic DP')
     plt.setp(line_classic, color='r', linewidth=2.0)
     line_k, = plt.plot(np.arange(10, 100), time2, label='K Strip (K=10)')
     plt.setp(line_k, color='b', linewidth=2.0)
     line_greedy, = plt.plot(np.arange(10, 100), time3, label='Aprox. Greedy')
     plt.setp(line_greedy, color='g', linewidth=2.0)
-    plt.legend(loc='upper left', handles=[line_classic, line_k, line_greedy])
+    line_branch, = plt.plot(np.arange(10, 100), time4, label='Branch and Bound')
+    plt.setp(line_branch, color='k', linewidth=2.0)
+    line_divide, = plt.plot(np.arange(10, 100), time5, label='Divide and Conquer')
+    plt.setp(line_divide, color='c', linewidth=2.0)
+    plt.legend(loc='upper left', handles=[line_classic, line_k, line_greedy, line_branch, line_divide])
     plt.xlabel('Length of Strings')
     plt.ylabel('Running Time')
     plt.title("Time Complexity Analysis")
@@ -266,7 +285,7 @@ def protein_database_processor(data):
     return result
 
 
-def experiment_protein_database(k_nearest, batch):
+def experiment_protein_database(k_nearest, batch=6222):
     data = protein_database_parser(batch)
     # for line in data:
     #     print(line)
@@ -325,7 +344,6 @@ def plotter_figure5(list, batch):
         area = cluster.__len__()*100*(1/(0.01*batch))
         plt.scatter(y, z, c=("#%06x" % random.randint(0, 0xFFFFFF)), s=area)
 
-
     # x = [1, 2, 3, 4, 5, 6, 7, 8]
     # y = [1, 2, 3, 4, 5, 6, 7, 8]
     # colors = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -335,11 +353,11 @@ def plotter_figure5(list, batch):
 
 
 def main():
-    # experiment100()
+    experiment100()
     # experiment_k()
     # experiment_greedy()
     # experiment_recursive()
-    experiment_protein_database(5, 200)
+    # experiment_protein_database(25, 6222)
 
 
 
