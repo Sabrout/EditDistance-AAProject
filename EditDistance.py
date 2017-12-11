@@ -624,7 +624,7 @@ def main():
     # s1 = "INTENTION"
     # s2 = "EXECUTION"
     s1 = string_generator(6)
-    s2 = string_generator(6)
+    s2 = string_generator(10)
 
     print('String #1 : ' + s1)
     print('String #2 : ' + s2)
@@ -632,14 +632,14 @@ def main():
     # CLASSIC DYNAMIC PROGRAMMING ALGORITHM
     print("_____________________________________")
     print("CLASSIC DYNAMIC PROGRAMMING ALGORITHM")
-    result = calc_runtime(med_classic_gui, s1, s2)
+    result = calc_runtime(med_classic, s1, s2)
 
     print(" ")
     print("{} {}".format("MINIMUM EDIT DISTANCE :", int(result[1][0])))
     print("RUNNING TIME :  %s seconds" % result[0])
     # Printing Matrix
-    # print("")
-    # print(result[1][1])
+    print("")
+    print(result[1][1])
 
     # K STRIP ALGORITHM
     print("_________________")
